@@ -70,10 +70,18 @@ app.get('/service',async(req,res)=>{
      * app.delete('/booking/:id) //
     */
 
+  app.get('/booking', async(req, res) =>{
+    const patient = req.query.patient;
+    const query = {patient: patient};
+    const bookings = await bookingCollection.find(query).toArray();
+    res.send(bookings);
+  })
+
+
  app.post('/booking', async(req,res)=>{
    const booking = req.body;
    const query = {treatment:booking.treatment,date: booking.date,patient:booking.patient}
-   const exists = await bookingCollection.findOne(booking);
+   const exists = await bookingCollection.findOne(query);
    if(exists){
      return res.send({success:false,booking:exists})
    }
