@@ -2,6 +2,7 @@ const { MongoClient, ServerApiVersion, MongoRuntimeError } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const res = require('express/lib/response');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -42,7 +43,8 @@ app.put('/user/:email', async(req,res)=>{
     $set: user,
   };
   const result = await userCollection.updateOne(filter,updateDoc,options);
-  res.send(result);
+  const token = jwt.sign({email:email},process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'})
+  res.send({result,token});
 })
 
 
